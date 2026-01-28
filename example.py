@@ -13,7 +13,7 @@ Perfect for integration with FastMCP servers.
 """
 
 import asyncio
-from rockauto_api import RockAutoClient
+from src.rockauto_api import RockAutoClient
 
 async def demo_rockauto_api():
     """Demonstrate the RockAuto API client capabilities"""
