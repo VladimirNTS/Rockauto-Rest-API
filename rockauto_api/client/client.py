@@ -1177,9 +1177,15 @@ class RockAutoClient(BaseClient):
                 headers=headers
             )
             search_response.raise_for_status()
-
+            # Получаем оригинальный HTML
+            original_html = search_response.text
+            
             # Parse search results
-            result_soup = BeautifulSoup(search_response.text, "html.parser")
+            result_soup = BeautifulSoup(original_html, "lxml")
+            with open('index.html', 'w') as f:
+                f.write(original_html)
+
+            print(result_soup.find('tbody', id='mtf_style_container[3]'))
             parts = self._parse_parts_search_results(result_soup)
 
             return PartSearchResult(
@@ -1237,9 +1243,13 @@ class RockAutoClient(BaseClient):
                 headers=headers
             )
             search_response.raise_for_status()
+            html = str(search_response.text)
+            print("Вывод", "remove-for-print" in search_response.text)
+            print(search_response.text.find("remove-for-print"))
 
-            # Parse category results
-            result_soup = BeautifulSoup(search_response.text, "html.parser")
+
+            result_soup = BeautifulSoup(html, "lxml")
+            
             results = self._parse_what_is_part_called_results(result_soup)
 
             return WhatIsPartCalledResults(
@@ -1255,53 +1265,58 @@ class RockAutoClient(BaseClient):
         """Parse parts from search results page."""
         parts = []
 
-        # Look for part results in tables or specific result containers
-        # This would need to be adapted based on the actual structure of results
-        result_tables = soup.find_all("table")
+        result_tables = soup.find_all('div', id=re.compile(r'^listingcontainer\[\d+\]$'))
 
         for table in result_tables:
-            rows = table.find_all("tr")
-            for row in rows:
-                cells = row.find_all(["td", "th"])
-                if len(cells) >= 3:  # Minimum cells for part data
-                    part_info = self._extract_part_from_search_row(row, cells)
-                    if part_info:
-                        parts.append(part_info)
+            part = self._extract_part_from_search_row(table)
+            if part:
+                parts.append(part)
 
         return parts
 
-    def _extract_part_from_search_row(self, row, cells) -> Optional[PartInfo]:
+
+    def _extract_part_from_search_row(self, table) -> Optional[PartInfo]:
         """Extract part information from a search result row."""
         try:
-            # This would need to be adapted based on actual search result structure
-            # For now, return a basic PartInfo with available data
-
-            # Look for part number
-            part_number = "Unknown"
-            for cell in cells:
-                text = cell.get_text(strip=True)
-                if text and len(text) > 2:
-                    part_number = text
-                    break
-
-            # Look for links
+            # Extract Link
             href = ""
-            link = row.find("a", href=True)
+            link = table.find("a", href=True, class_="ra-btn ra-btn-moreinfo")
             if link:
                 href = link.get("href", "")
                 if href and not href.startswith("http"):
                     href = f"https://www.rockauto.com{href}"
+            
+            # Extract name
+            name = table.find('span', class_="span-link-underline-remover")
+            if name:
+                name = name.text
 
+            # Extract brand
+            brand = table.find('span', class_="listing-final-manufacturer no-text-select")
+            if brand:
+                brand = brand.text
+
+            # Extract brand
+            price = table.find('span', id=re.compile(r'^dprice\[\d+\]\[v\]$'))
+            if price:
+                price = price.text
+
+            # Extract Part number
+            part_number = table.find('span', class_="listing-final-partnumber no-text-select")
+            if part_number:
+                part_number = part_number.text
+            
             return PartInfo(
+                name=name.replace('Info', '').strip() if name else "Unknown",
                 part_number=part_number,
-                brand="Unknown",
-                price="Unknown",
-                description="Unknown",
-                href=href,
-                specifications={}
+                brand=brand.strip() if brand else 'Unknown',
+                price=float(price.replace('$', '').strip()) if price else 0,
+                url=href,
+                specifications='{}'
             )
 
-        except Exception:
+        except Exception as e:
+            print(e)
             return None
 
     def _parse_what_is_part_called_results(self, soup: BeautifulSoup) -> list[WhatIsPartCalledResult]:
@@ -1310,7 +1325,7 @@ class RockAutoClient(BaseClient):
 
         # Look for category results - this would need to be adapted based on actual result structure
         # The results typically show as a table with Main Category/Subcategory columns
-        tables = soup.find_all("table")
+        tables = soup.g
 
         for table in tables:
             rows = table.find_all("tr")

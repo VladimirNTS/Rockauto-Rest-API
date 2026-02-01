@@ -16,6 +16,7 @@ class PartInfo(BaseModel):
     image_url: Optional[str] = Field(None, description="Part image URL")
     info_url: Optional[str] = Field(None, description="More info/details page URL")
     video_url: Optional[str] = Field(None, description="Product video URL (from moreinfo.php)")
+    price: Optional[float] = Field(0, description="Part price (e.g., '$49.99')")
 
     # Static technical details that don't change frequently
     category: Optional[str] = Field(None, description="Part category")
