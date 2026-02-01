@@ -6,7 +6,7 @@ from httpx import AsyncClient
 async def usd_to_gel(amount):
 
     params = {
-        'from': 'USD',
+        'from': 'EUR',
         'to': 'GEL',
         'date': datetime.today().strftime('%Y-%m-%d'),
         'amount': str(amount),

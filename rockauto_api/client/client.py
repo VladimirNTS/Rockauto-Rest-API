@@ -1310,7 +1310,7 @@ class RockAutoClient(BaseClient):
                 name=name.replace('Info', '').strip() if name else "Unknown",
                 part_number=part_number,
                 brand=brand.strip() if brand else 'Unknown',
-                price=float(price.replace('$', '').strip()) if price else 0,
+                price=float(price.replace('€', '').strip()) if price else 0,
                 url=href,
                 specifications='{}'
             )

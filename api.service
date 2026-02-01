@@ -1,0 +1,12 @@
+[Unit] 
+Description=Calc TG Bot 
+After=multi-user.target 
+
+[Service] 
+Type=simple 
+ExecStart=/root/Rockauto-Rest-API/.venv/bin/python /root/Rockauto-Rest-API/main.py 
+WorkingDirectory=/root/Rockauto-Rest-API
+Restart=always 
+
+[Install] 
+WantedBy=multi-user.target

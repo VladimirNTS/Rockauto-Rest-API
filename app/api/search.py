@@ -14,7 +14,7 @@ router = APIRouter(prefix="/backend/price_items/api/v1/search", tags=["search"])
 @router.get("/get_brands_by_oem", response_model=BrandsResponse)
 async def get_brands_by_oem(
     oem: str = Query(..., description="OEM number"),
-    auth: dict = Security(get_api_key)
+    api_key: str = Security(get_api_key)
 ):
     data = await find_parts_by_oem(oem)
 

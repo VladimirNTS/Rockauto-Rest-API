@@ -9,6 +9,7 @@ from app.config import PARTS_SOFT_API_KEYS
 api_key_query = APIKeyQuery(name="API key", auto_error=False)
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
+print(PARTS_SOFT_API_KEYS)
 
 async def get_api_key(
     api_key_q: str = Security(api_key_query),
