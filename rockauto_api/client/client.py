@@ -1240,7 +1240,8 @@ class RockAutoClient(BaseClient):
             search_response = await self.session.post(
                 "https://www.rockauto.com/en/partsearch/",
                 data=form_data,
-                headers=headers
+                headers=headers,
+                timeout=15.0
             )
             search_response.raise_for_status()
             html = str(search_response.text)
@@ -1310,7 +1311,7 @@ class RockAutoClient(BaseClient):
                 name=name.replace('Info', '').strip() if name else "Unknown",
                 part_number=part_number,
                 brand=brand.strip() if brand else 'Unknown',
-                price=float(price.replace('€', '').strip()) if price else 0,
+                price=price.strip() if price else '0',
                 url=href,
                 specifications='{}'
             )
