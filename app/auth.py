@@ -1,4 +1,4 @@
-from fastapi import Request, HTTPException, Security, status, Depends
+from fastapi import Query, Request, HTTPException, Security, status, Depends
 import secrets
 from fastapi.security.api_key import APIKeyQuery, APIKeyHeader
 from starlette.status import HTTP_403_FORBIDDEN
@@ -30,5 +30,18 @@ async def get_api_key(
         status_code=HTTP_403_FORBIDDEN,
         detail="Invalid API key",
     )
+
+
+def check_api_key(api_key: str = Query(...)):
+    if not api_key:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="API key required",
+        )
+    for valid_key in PARTS_SOFT_API_KEYS:
+        if secrets.compare_digest(api_key, valid_key):
+            return PARTS_SOFT_API_KEYS[valid_key]
+
+    raise HTTPException(status_code=403, detail="Invalid api_key")
 
     

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query, Body, Security
 from typing import List, Optional
-from app.auth import get_api_key
+from app.auth import check_api_key, get_api_key
 from app.api.schemas import (
     BrandsResponse, BrandItem,
     OffersResponse, OfferItem,
@@ -14,8 +14,10 @@ router = APIRouter(prefix="/backend/price_items/api/v1/search", tags=["search"])
 @router.get("/get_brands_by_oem", response_model=BrandsResponse)
 async def get_brands_by_oem(
     oem: str = Query(..., description="OEM number"),
-    api_key: str = Security(get_api_key)
+    api_key: str = Query(...)
 ):
+    check_api_key(api_key)
+
     data = await find_parts_by_oem(oem)
 
     return BrandsResponse(result="ok", data=data)
@@ -27,11 +29,12 @@ async def get_offers_by_oem_and_make_name(
     make_name: Optional[str] = Query(None),
     without_cross: Optional[bool] = Query(None),
     text: Optional[str] = Query(None),
-    auth: dict = Security(get_api_key)
+    api_key: str = Query(...)
 ):
     """
     GET /get_offers_by_oem_and_make_name?oem=...&make_name=...
     """
+    check_api_key(api_key)
     
     data = await find_parts_by_oem_and_make_name(oem)
 
@@ -41,11 +44,12 @@ async def get_offers_by_oem_and_make_name(
 @router.post("/get_offers_by_oem_and_make_name", response_model=OffersResponse)
 async def get_offers_batch(
     payload: BatchRequest = Body(...),
-    auth: dict = Security(get_api_key)
+    api_key: str = Query(...)
 ):
     """
     POST /get_offers_by_oem_and_make_name
     Body: { "oem_list": [...], "articles": [{ "oem":"...", "brand":"..." }, ...] }
     """
+    check_api_key(api_key)
     return OffersResponse(result="ok", data=[])
 
