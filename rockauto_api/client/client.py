@@ -413,8 +413,6 @@ class RockAutoClient(BaseClient):
             
             # Parse search results
             result_soup = BeautifulSoup(original_html, "lxml")
-            with open('index.html', 'w') as f:
-                f.write(original_html)
 
             parts = self._parse_parts_search_results(result_soup)
 
