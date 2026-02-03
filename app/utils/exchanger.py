@@ -9,12 +9,13 @@ async def usd_to_gel(amount):
         'from': 'EUR',
         'to': 'GEL',
         'date': datetime.today().strftime('%Y-%m-%d'),
-        'amount': str(amount),
+        'amount': 0,
         'format': 'json',
     }
     
     if '€' in amount:
-        amount = amount.replace('€', '').strip()
+        amount = float(amount.replace('€', '').strip())
+        params['amount'] = amount
         async with AsyncClient() as client:
             response = await client.get('https://api.fxratesapi.com/convert', params=params)
             
@@ -22,7 +23,8 @@ async def usd_to_gel(amount):
 
     elif '$' in amount:
         params['from'] = 'USD'
-        amount = amount.replace('$', '').strip()
+        amount = float(amount.replace('$', '').strip())
+        params['amount'] = amount
         async with AsyncClient() as client:
             response = await client.get('https://api.fxratesapi.com/convert', params=params)
             

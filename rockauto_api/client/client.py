@@ -416,7 +416,6 @@ class RockAutoClient(BaseClient):
             with open('index.html', 'w') as f:
                 f.write(original_html)
 
-            print(result_soup.find('tbody', id='mtf_style_container[3]'))
             parts = self._parse_parts_search_results(result_soup)
 
             return PartSearchResult(
@@ -475,14 +474,20 @@ class RockAutoClient(BaseClient):
             part_number = table.find('span', class_="listing-final-partnumber no-text-select")
             if part_number:
                 part_number = part_number.text
-            
+
+            # Extract IMG
+            part_img = table.find('img', id=re.compile(r'^inlineimg_thumb\[\d+\]$'))
+            if part_img:
+                part_img = "https://www.rockauto.com"+part_img['src']
+
             return PartInfo(
                 name=name.replace('Info', '').strip() if name else "Unknown",
                 part_number=part_number,
                 brand=brand.strip() if brand else 'Unknown',
                 price=price.strip() if price else '0',
                 url=href,
-                specifications='{}'
+                specifications='{}',
+                image_url=part_img
             )
 
         except Exception as e:
