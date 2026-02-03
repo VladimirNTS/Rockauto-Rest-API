@@ -8,10 +8,11 @@ from app.api.schemas import (
 )
 from app.utils.rockauto import find_parts_by_oem, find_parts_by_oem_and_make_name
 
-router = APIRouter(prefix="/backend/price_items/api/v1/search", tags=["search"])
+router = APIRouter(prefix="", tags=["search"])
 
 
-@router.get("/get_brands_by_oem", response_model=BrandsResponse)
+@router.get("/backend/price_items/api/v1/search/get_brands_by_oem", response_model=BrandsResponse)
+@router.get("/api/v1/search/get_brands_by_oem", response_model=BrandsResponse)
 async def get_brands_by_oem(
     oem: str = Query(..., description="OEM number"),
     api_key: str = Query(...)
@@ -23,7 +24,8 @@ async def get_brands_by_oem(
     return BrandsResponse(result="ok", data=data)
 
 
-@router.get("/get_offers_by_oem_and_make_name", response_model=OffersResponse)
+@router.get("/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
+@router.get("/backend/price_items/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
 async def get_offers_by_oem_and_make_name(
     oem: Optional[str] = Query(None),
     make_name: Optional[str] = Query(None),
@@ -41,7 +43,8 @@ async def get_offers_by_oem_and_make_name(
     return OffersResponse(result="ok", data=data)
 
 
-@router.post("/get_offers_by_oem_and_make_name", response_model=OffersResponse)
+@router.post("/backend/price_items/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
+@router.post("/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
 async def get_offers_batch(
     payload: BatchRequest = Body(...),
     api_key: str = Query(...)
