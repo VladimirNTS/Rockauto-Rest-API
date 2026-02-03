@@ -52,12 +52,16 @@ class BaseClient:
                 "Cache-Control": "max-age=0"
             }
 
+        LOGIN = "pcjKBHzBtm-res-us-session-acc1"
+        PASSWORD = "PC_3WhWIlWwnW1l5tQP4"
+
         # Create HTTP session with chosen headers
         self.session = httpx.AsyncClient(
             headers=headers,
             timeout=30.0,
             follow_redirects=True,  # Handle 302 redirects automatically
-            cookies=httpx.Cookies()  # Use httpx's built-in cookie jar
+            cookies=httpx.Cookies(),  # Use httpx's built-in cookie jar
+            proxy=f"http://{LOGIN}:{PASSWORD}@51.77.190.247:5959"
         )
 
         # Set required initial cookies for RockAuto API
