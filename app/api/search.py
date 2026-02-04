@@ -27,7 +27,7 @@ async def get_brands_by_oem(
 @router.get("/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
 @router.get("/backend/price_items/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
 async def get_offers_by_oem_and_make_name(
-    oem: Optional[str] = Query(None),
+    oem: str = Query(...),
     make_name: Optional[str] = Query(None),
     without_cross: Optional[bool] = Query(None),
     text: Optional[str] = Query(None),

@@ -36,6 +36,7 @@ async def find_parts_by_oem_and_make_name(
         for i in vehicle.parts:
             data.append({
                 'oem': i.part_number,
+                'number': oem,
                 'make_name': i.brand,
                 'detail_name': i.name,
                 'cost': await usd_to_gel(i.price),
@@ -58,14 +59,15 @@ async def find_list_of_parts_by_oem_and_make_name(
     async with RockAutoClient() as client:
         data = []
 
-        for i in articles:
+        for article in articles:
             vehicle = await client.search_parts_by_number(
-                part_number=i['oem'],
-                manufacturer=i['make_name'],
+                part_number=article['oem'],
+                manufacturer=article['make_name'],
             )
             for i in vehicle.parts:
                 data.append({
                     'oem': i.part_number,
+                    'number': article['oem'],
                     'make_name': i.brand,
                     'detail_name': i.name,
                     'cost': await usd_to_gel(i.price),
