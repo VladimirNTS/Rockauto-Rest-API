@@ -371,6 +371,7 @@ class RockAutoClient(BaseClient):
                 mfr_option = manufacturers.get_manufacturer_by_name(manufacturer)
                 if mfr_option:
                     manufacturer_value = mfr_option.value
+            print(manufacturer_value)
 
             if part_group and part_group.lower() != "all":
                 part_groups = await self.get_part_groups()
@@ -463,10 +464,10 @@ class RockAutoClient(BaseClient):
             if brand:
                 brand = brand.text
 
-            # Extract brand
+            # Extract price
             price = table.find('span', id=re.compile(r'^dprice\[\d+\]\[v\]$'))
             if price:
-                price = price.text
+                price = price.text.replace('/Each', '').replace('(', '').replace(')', '')
 
             # Extract Part number
             part_number = table.find('span', class_="listing-final-partnumber no-text-select")
@@ -477,6 +478,11 @@ class RockAutoClient(BaseClient):
             part_img = table.find('img', id=re.compile(r'^inlineimg_thumb\[\d+\]$'))
             if part_img:
                 part_img = "https://www.rockauto.com"+part_img['src']
+            else:
+                part_img = ''
+
+            if not '$' in price and not '€' in price:
+                return None
 
             return PartInfo(
                 name=name.replace('Info', '').strip() if name else "Unknown",

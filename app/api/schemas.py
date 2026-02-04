@@ -23,7 +23,7 @@ class OfferItem(BaseModel):
     qnt: Optional[int] = None
     min_delivery_day: Optional[int] = None
     max_delivery_day: Optional[int] = None
-    goods_img_url: Optional[str] = ''
+    goods_img_url: Optional[list[str]] = []
     supplier_code: Optional[str] = None
     system_hash: Optional[str] = None
     extra: Optional[Any] = None
