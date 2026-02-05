@@ -411,6 +411,8 @@ class RockAutoClient(BaseClient):
             search_response.raise_for_status()
             # Получаем оригинальный HTML
             original_html = search_response.text
+            with open('index.html', 'w') as f:
+                f.write(original_html)
             
             # Parse search results
             result_soup = BeautifulSoup(original_html, "lxml")
@@ -458,28 +460,29 @@ class RockAutoClient(BaseClient):
             name = table.find('span', class_="span-link-underline-remover")
             if name:
                 name = name.text
+            else:
+                name = ""
 
             # Extract brand
             brand = table.find('span', class_="listing-final-manufacturer no-text-select")
             if brand:
                 brand = brand.text
+            else:
+                brand = ""
 
             # Extract price
             price = table.find('span', id=re.compile(r'^dprice\[\d+\]\[v\]$'))
             if price:
                 price = price.text.replace('/Each', '').replace('(', '').replace(')', '')
+            else:
+                price = 0
 
             # Extract Part number
             part_number = table.find('span', class_="listing-final-partnumber no-text-select")
             if part_number:
                 part_number = part_number.text
-
-            # Extract IMG
-            part_img = table.find('img', id=re.compile(r'^inlineimg_thumb\[\d+\]$'))
-            if part_img:
-                part_img = "https://www.rockauto.com"+part_img['src']
             else:
-                part_img = ''
+                return None
 
             if not '$' in price and not '€' in price:
                 return None
@@ -491,7 +494,6 @@ class RockAutoClient(BaseClient):
                 price=price.strip() if price else '0',
                 url=href,
                 specifications='{}',
-                image_url=part_img
             )
 
         except Exception as e:

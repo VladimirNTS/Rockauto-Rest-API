@@ -36,18 +36,19 @@ async def find_parts_by_oem_and_make_name(
         for i in vehicle.parts:
             data.append({
                 'oem': i.part_number,
-                'number': oem,
                 'make_name': i.brand,
                 'detail_name': i.name,
                 'cost': await usd_to_gel(i.price),
-                'goods_img_url': [i.image_url],
                 'qnt': 25,
-                'min_qnt': 2,
                 'min_delivery_day': 0,
                 'max_delivery_day': 0,
-                'sup_logo': "BERG",
+                'min_qnt': 2,
+                'sup_logo': "ROCKAUTO",
                 'stat_group': 0,
-                'system_hash': ""
+                'system_hash': "",
+                'weight': 0.0,
+                'volume': 0.0,
+                'sys_info': {}
             })
 
         return data
