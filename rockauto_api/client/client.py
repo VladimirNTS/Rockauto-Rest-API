@@ -4,56 +4,21 @@ import re
 import json
 import urllib.parse
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 from bs4 import BeautifulSoup
 
 from ..models import (
-    AccountActivityResult,
-    BillingInfo,
     CacheConfiguration,
-    Engine,
-    ExternalOrderRequest,
     ManufacturerOptions,
-    OrderHistoryFilter,
-    OrderHistoryItem,
-    OrderHistoryResult,
-    OrderItem,
-    OrderListRequest,
-    OrderLookupRequest,
-    OrderStatus,
-    OrderStatusError,
-    OrderStatusResult,
     PartCache,
-    PartCategory,
     PartGroupOptions,
     PartInfo,
     PartSearchOption,
     PartSearchResult,
     PartTypeOptions,
-    SavedAddress,
-    SavedAddressesResult,
-    SavedVehicle,
-    SavedVehiclesResult,
-    ShippingInfo,
-    ToolCategories,
-    ToolCategory,
-    ToolInfo,
-    ToolsResult,
-    VehicleEngines,
-    VehicleMakes,
-    VehicleModels,
-    VehiclePartCategories,
-    VehiclePartsResult,
-    VehicleYears,
-    WhatIsPartCalledResult,
-    WhatIsPartCalledResults,
 )
-from ..utils import PartExtractor
 from .base import BaseClient
-
-if TYPE_CHECKING:
-    from .vehicle import Vehicle
 
 
 class RockAutoClient(BaseClient):
@@ -134,7 +99,7 @@ class RockAutoClient(BaseClient):
 
             self._session_initialized = True
 
-        except Exception as e:
+        except Exception:
             # Session initialization failed, but continue without token
             # This will fall back to the old HTML scraping method
             self._session_initialized = True
@@ -415,7 +380,7 @@ class RockAutoClient(BaseClient):
                 f.write(original_html)
             
             # Parse search results
-            result_soup = BeautifulSoup(original_html, "lxml")
+            result_soup = BeautifulSoup(original_html, 'html-parser')
 
             parts = self._parse_parts_search_results(result_soup)
 

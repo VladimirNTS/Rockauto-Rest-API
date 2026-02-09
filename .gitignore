@@ -212,3 +212,5 @@ Thumbs.db
 
 # uv specific
 .uv-cache/
+
+index.html
