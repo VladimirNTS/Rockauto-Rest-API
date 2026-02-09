@@ -13,7 +13,7 @@ async def find_parts_by_oem(oem):
         data = []
         for i in vehicle.parts:
             data.append({
-                'oem': i.part_number,
+                'number': oem,
                 'brand': i.brand,
                 'des_text': i.name
             })
@@ -42,7 +42,7 @@ async def find_parts_by_oem_and_make_name(
                 'qnt': 25,
                 'min_delivery_day': 0,
                 'max_delivery_day': 0,
-                'min_qnt': 2,
+                'min_qnt': 1,
                 'sup_logo': "ROCKAUTO",
                 'stat_group': 0,
                 'system_hash': "",

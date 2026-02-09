@@ -4,7 +4,6 @@ from app.auth import check_api_key, get_api_key
 from app.api.schemas import (
     BrandsResponse, BrandItem,
     OffersResponse, OfferItem,
-    BatchRequest
 )
 from app.utils.rockauto import find_parts_by_oem, find_parts_by_oem_and_make_name
 
@@ -46,7 +45,7 @@ async def get_offers_by_oem_and_make_name(
 @router.post("/backend/price_items/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
 @router.post("/api/v1/search/get_offers_by_oem_and_make_name", response_model=OffersResponse)
 async def get_offers_batch(
-    payload: BatchRequest = Body(...),
+    payload = Body(...),
     api_key: str = Query(...)
 ):
     """
