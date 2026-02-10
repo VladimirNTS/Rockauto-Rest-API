@@ -13,7 +13,7 @@ async def find_parts_by_oem(oem):
         data = []
         for i in vehicle.parts:
             data.append({
-                'number': oem,
+                'number': i.part_number,
                 'brand': i.brand,
                 'des_text': i.name
             })

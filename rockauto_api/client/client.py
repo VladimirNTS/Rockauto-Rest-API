@@ -380,7 +380,7 @@ class RockAutoClient(BaseClient):
                 f.write(original_html)
             
             # Parse search results
-            result_soup = BeautifulSoup(original_html, 'html-parser')
+            result_soup = BeautifulSoup(original_html, 'html.parser')
 
             parts = self._parse_parts_search_results(result_soup)
 
