@@ -28,7 +28,7 @@ async def get_brands_by_oem(
 async def get_offers_by_oem_and_make_name(
     oem: str = Query(...),
     make_name: Optional[str] = Query(None),
-    without_cross: Optional[bool] = Query(None),
+    without_cross: Optional[bool] = Query(False),
     text: Optional[str] = Query(None),
     api_key: str = Query(...)
 ):
@@ -37,7 +37,7 @@ async def get_offers_by_oem_and_make_name(
     """
     check_api_key(api_key)
     
-    data = await find_parts_by_oem_and_make_name(oem)
+    data = await find_parts_by_oem_and_make_name(oem, make_name, cross = without_cross)
 
     return OffersResponse(result="ok", data=data)
 

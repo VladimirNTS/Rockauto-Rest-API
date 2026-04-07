@@ -28,8 +28,11 @@ class RockAutoClient(BaseClient):
     Provides methods for searching vehicle parts with comprehensive filtering
     and Vehicle-scoped operations for intuitive part discovery.
     """
+    def __init__(self):
+        super().__init__()
 
-    def __init__(
+
+    async def init_2(
         self,
         # === CAPTCHA BYPASS SETTINGS ===
         use_mobile_profile: bool = True,  # Mobile profile reduces CAPTCHA triggers
@@ -52,7 +55,7 @@ class RockAutoClient(BaseClient):
             max_cached_parts: Maximum number of parts to cache (default: 1000)
             max_cached_searches: Maximum number of search results to cache (default: 100)
         """
-        super().__init__(use_mobile_profile=use_mobile_profile)
+        await self.init()
         self._nck_token = None  # CAPTCHA bypass token
         self._session_initialized = False
 

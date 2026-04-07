@@ -5,11 +5,16 @@ from typing import Dict, Optional
 
 import httpx
 
+from app.utils.proxy import get_proxy
+
 
 class BaseClient:
     """Base client with common HTTP functionality."""
+    def __init__(self):
+        pass
 
-    def __init__(self, use_mobile_profile: bool = True):
+
+    async def init(self, use_mobile_profile: bool = True):
         """Initialize the base client with proper headers and session.
 
         Args:
@@ -52,8 +57,11 @@ class BaseClient:
                 "Cache-Control": "max-age=0"
             }
 
-        LOGIN = "pcjKBHzBtm-res-us-session-acc1"
-        PASSWORD = "PC_3WhWIlWwnW1l5tQP4"
+        LOGIN = "pcv6fFUdph-res-us"
+        PASSWORD = "PC_1E6plyKHrsTSMfR86"
+        proxy = await get_proxy()
+        if not proxy:
+            pass
 
         # Create HTTP session with chosen headers
         self.session = httpx.AsyncClient(
@@ -61,7 +69,7 @@ class BaseClient:
             timeout=30.0,
             follow_redirects=True,  # Handle 302 redirects automatically
             cookies=httpx.Cookies(),  # Use httpx's built-in cookie jar
-            proxy=f"http://{LOGIN}:{PASSWORD}@51.77.190.247:5959"
+            proxy=proxy
         )
 
         # Set required initial cookies for RockAuto API

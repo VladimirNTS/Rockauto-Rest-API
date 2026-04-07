@@ -1,6 +1,7 @@
 from typing import List, Dict, Any, Optional
 import logging
 import asyncio
+import time
 
 from app.utils.exchanger import usd_to_gel
 from rockauto_api import RockAutoClient
@@ -8,8 +9,12 @@ from rockauto_api import RockAutoClient
 
 async def find_parts_by_oem(oem):
     async with RockAutoClient() as client:
+        await client.init_2()
+        start = time.perf_counter()
         # Find a specific vehicle
         vehicle = await client.search_parts_by_number(part_number=oem)
+        end = time.perf_counter()
+        print(f"Выполнилось за {end - start:.4}")
         data = []
         for i in vehicle.parts:
             data.append({
@@ -24,13 +29,15 @@ async def find_parts_by_oem(oem):
 async def find_parts_by_oem_and_make_name(
     oem: str,
     make_name: str = '',
-    text: str = ''
+    text: str = '',
+    cross: bool = False
 ):
     async with RockAutoClient() as client:
         # Find a specific vehicle
+        client.init_2()
         vehicle = await client.search_parts_by_number(
             part_number=text + oem,
-            manufacturer=make_name,
+            manufacturer='' if not cross else make_name,
         )
         data = []
         for i in vehicle.parts:
@@ -59,6 +66,7 @@ async def find_list_of_parts_by_oem_and_make_name(
 ):
     async with RockAutoClient() as client:
         data = []
+        client.init_2()
 
         for article in articles:
             vehicle = await client.search_parts_by_number(
