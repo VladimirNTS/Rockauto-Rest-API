@@ -34,7 +34,7 @@ async def find_parts_by_oem_and_make_name(
 ):
     async with RockAutoClient() as client:
         # Find a specific vehicle
-        client.init_2()
+        await client.init_2()
         vehicle = await client.search_parts_by_number(
             part_number=text + oem,
             manufacturer='' if not cross else make_name,
@@ -66,7 +66,7 @@ async def find_list_of_parts_by_oem_and_make_name(
 ):
     async with RockAutoClient() as client:
         data = []
-        client.init_2()
+        await client.init_2()
 
         for article in articles:
             vehicle = await client.search_parts_by_number(

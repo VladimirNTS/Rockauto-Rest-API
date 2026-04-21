@@ -396,7 +396,7 @@ class RockAutoClient(BaseClient):
             )
 
         except Exception as e:
-            raise Exception(f"Failed to search parts: {str(e)}")
+            raise Exception(e)
 
 
     def _parse_parts_search_results(self, soup: BeautifulSoup) -> list[PartInfo]:

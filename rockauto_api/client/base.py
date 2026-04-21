@@ -57,11 +57,9 @@ class BaseClient:
                 "Cache-Control": "max-age=0"
             }
 
-        LOGIN = "pcv6fFUdph-res-us"
-        PASSWORD = "PC_1E6plyKHrsTSMfR86"
         proxy = await get_proxy()
         if not proxy:
-            pass
+            raise Exception('No proxy')
 
         # Create HTTP session with chosen headers
         self.session = httpx.AsyncClient(
